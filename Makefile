@@ -14,12 +14,13 @@ debug:
 	$(UV) run $(PYTHON) -m pdb -m $(SRC)
 
 lint:
-	$(UV) run flake8 $(SRC)
-	$(UV) run mypy $(SRC)
-
-lint-strict:
-	$(UV) run flake8 $(SRC)
-	$(UV) run mypy $(SRC) --strict
+	$(UV) run flake8 .
+	$(UV) run mypy . \
+		--warn-return-any \
+		--warn-unused-ignores \
+		--ignore-missing-imports \
+		--disallow-untyped-defs \
+		--check-untyped-defs
 
 clean:
 	find . -type d -name "__pycache__" -exec rm -rf {} +

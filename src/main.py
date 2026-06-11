@@ -4,7 +4,8 @@ import json
 
 from llm_sdk import Small_LLM_Model
 
-from src.function_selector import select_function
+from src.utils import parse_arguments
+from src.function_selector import select_function, build_function_selection_prompt
 from src.parameter_extractor import extract_parameters
 from src.parser import (
     load_function_definitions,
@@ -14,19 +15,19 @@ from src.parser import (
 
 def main() -> None:
     """Run the function calling pipeline."""
-
+    args = parse_arguments()
     results: list[Dict[str, Any]] = []
 
     try:
 
         functions = load_function_definitions(
-            "data/input_old/functions_definition.json"
+            args.functions_definition
         )
 
         model = Small_LLM_Model()
 
         requests = load_prompts(
-            "data/input_old/function_calling_tests.json"
+            args.input
         )
 
     except Exception as exc:
@@ -37,6 +38,10 @@ def main() -> None:
 
         return
 
+    static_ids = build_function_selection_prompt(
+        model,
+        functions
+    )
     for item in requests:
 
         request: str = item["prompt"]
@@ -55,7 +60,8 @@ def main() -> None:
                 select_function(
                     model,
                     functions,
-                    request
+                    request,
+                    static_ids
                 )
             )
 
@@ -116,7 +122,7 @@ def main() -> None:
         )
 
     with open(
-        "data/output/function_calling_results.json",
+        args.output,
         "w",
         encoding="utf-8",
     ) as file:
