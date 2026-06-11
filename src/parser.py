@@ -1,19 +1,12 @@
 import json
-from pathlib import Path
 from typing import Any
 
 from pydantic import BaseModel
 from pydantic import ValidationError
 
 
-class ParameterDefinition(BaseModel):
-    """Parameter definition schema."""
-
-    type: str
-
-
-class ReturnDefinition(BaseModel):
-    """Return value schema."""
+class Type(BaseModel):
+    """Type definition schema."""
 
     type: str
 
@@ -23,8 +16,8 @@ class FunctionDefinition(BaseModel):
 
     name: str
     description: str
-    parameters: dict[str, ParameterDefinition]
-    returns: ReturnDefinition
+    parameters: dict[str, Type]
+    returns: Type
 
 
 class PromptInput(BaseModel):
@@ -33,33 +26,24 @@ class PromptInput(BaseModel):
     prompt: str
 
 
-class FunctionCall(BaseModel):
-    """Function call schema."""
-
-    prompt: str
-    name: str
-    parameters: dict[str, Any]
-
-
 def load_json_file(path: str) -> Any:
     """Load a JSON file."""
-
-    file_path = Path(path)
-
-    if not file_path.exists():
-        raise FileNotFoundError(
-            f"File not found: {path}"
-        )
 
     try:
 
         with open(
-            file_path,
+            path,
             "r",
             encoding="utf-8",
         ) as file:
 
             return json.load(file)
+
+    except FileNotFoundError as exc:
+
+        raise FileNotFoundError(
+            f"File not found: {path}"
+        ) from exc
 
     except json.JSONDecodeError as exc:
 
