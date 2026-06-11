@@ -5,7 +5,7 @@ from llm_sdk import Small_LLM_Model
 def build_function_selection_prompt(
     model: Small_LLM_Model,
     functions: List[Dict[str, Any]]
-) -> list[int]:
+) -> Any:
     """Build the function selection prompt."""
 
     function_names = [
@@ -58,12 +58,13 @@ def build_function_selection_prompt(
     )
     return static_ids
 
+
 def select_function(
     model: Small_LLM_Model,
     functions: List[Dict[str, Any]],
     request: str,
     static_ids: list[int]
-) -> str:
+) -> Any:
     """Select a function using constrained decoding."""
     dynamic_prompt = (
         f"Input: {request}\n"
@@ -75,7 +76,6 @@ def select_function(
     input_ids = (static_ids + dynamic_ids)
     token_map = {}
 
-    
     for fn in functions:
 
         token_map[fn["name"]] = (

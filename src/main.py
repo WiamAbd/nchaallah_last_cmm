@@ -5,7 +5,10 @@ import json
 from llm_sdk import Small_LLM_Model
 
 from src.utils import parse_arguments
-from src.function_selector import select_function, build_function_selection_prompt
+from src.function_selector import (
+    select_function,
+    build_function_selection_prompt
+)
 from src.parameter_extractor import extract_parameters
 from src.parser import (
     load_function_definitions,

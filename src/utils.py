@@ -1,5 +1,6 @@
 import argparse
 
+
 def parse_arguments() -> argparse.Namespace:
     """Parse command-line arguments."""
 
