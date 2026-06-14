@@ -177,14 +177,6 @@ def extract_parameters(
         generated_ids
     )
 
-    print(
-        "\n===== RAW OUTPUT =====\n"
-    )
-
-    print(
-        repr(output)
-    )
-
     match = re.search(
         r"\{[\s\S]*?\}",
         output,

@@ -45,6 +45,21 @@ def main() -> None:
         model,
         functions
     )
+    token_map = {}
+
+    for fn in functions:
+
+        token_map[fn["name"]] = (
+            model.encode(
+                fn["name"]
+            )[0].tolist()
+        )
+
+    token_map["null"] = (
+        model.encode(
+            "null"
+        )[0].tolist()
+    )
     for item in requests:
 
         request: str = item["prompt"]
@@ -64,7 +79,8 @@ def main() -> None:
                     model,
                     functions,
                     request,
-                    static_ids
+                    static_ids,
+                    token_map
                 )
             )
 

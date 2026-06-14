@@ -63,7 +63,8 @@ def select_function(
     model: Small_LLM_Model,
     functions: List[Dict[str, Any]],
     request: str,
-    static_ids: list[int]
+    static_ids: list[int],
+    token_map: dict[Any, Any]
 ) -> Any:
     """Select a function using constrained decoding."""
     dynamic_prompt = (
@@ -74,21 +75,6 @@ def select_function(
         model.encode(dynamic_prompt)[0].tolist()
     )
     input_ids = (static_ids + dynamic_ids)
-    token_map = {}
-
-    for fn in functions:
-
-        token_map[fn["name"]] = (
-            model.encode(
-                fn["name"]
-            )[0].tolist()
-        )
-
-    token_map["null"] = (
-        model.encode(
-            "null"
-        )[0].tolist()
-    )
 
     remaining = list(
         token_map.keys()
